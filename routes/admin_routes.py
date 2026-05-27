@@ -246,12 +246,53 @@ def reports():
         pdf.set_font("Arial", size=12)
         pdf.cell(200, 10, txt="Orders Report", ln=True, align="C")
         pdf.ln(4)
+        pdf.set_auto_page_break(True, margin=15)
+        usable_w = pdf.w - pdf.l_margin - pdf.r_margin
+        font_family = getattr(pdf, "font_family", "Arial")
         for row in orders[:50]:
             line = (
                 f"#{row['order_id']} {row['student_name']} - {row['item_name']} "
                 f"x{row['quantity']} = {row['total_amount']} ({row['order_status']})"
             )
-            pdf.multi_cell(0, 8, txt=line)
+            try:
+                pdf.set_x(pdf.l_margin)
+            except Exception:
+                pass
+
+            try:
+                pdf.multi_cell(usable_w, 8, txt=line)
+            except Exception as exc:
+                from fpdf.errors import FPDFException
+
+                if isinstance(exc, FPDFException):
+                    orig_size = getattr(pdf, "font_size_pt", 12)
+                    success = False
+                    for new_size in range(int(orig_size) - 1, 5, -1):
+                        pdf.set_font(font_family, size=new_size)
+                        try:
+                            pdf.set_x(pdf.l_margin)
+                            pdf.multi_cell(usable_w, 8, txt=line)
+                            success = True
+                            break
+                        except FPDFException:
+                            continue
+
+                    if not success:
+                        import textwrap
+
+                        char_w = pdf.get_string_width("M") or 1
+                        approx_chars = max(1, int(usable_w / char_w))
+                        wrapped = textwrap.wrap(line, width=approx_chars, break_long_words=True, break_on_hyphens=True)
+                        for wl in wrapped:
+                            pdf.set_x(pdf.l_margin)
+                            pdf.multi_cell(usable_w, 8, txt=wl)
+
+                    try:
+                        pdf.set_font(font_family, size=orig_size)
+                    except Exception:
+                        pass
+                else:
+                    raise
         pdf_out = pdf.output(dest="S")
         if isinstance(pdf_out, bytearray):
             pdf_bytes = bytes(pdf_out)

@@ -1,0 +1,25 @@
+#.venv and Python artifacts
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# env files
+.env
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+desktop.ini
+
+# Database dumps
+*.sql
+
+# node modules if any
+node_modules/
