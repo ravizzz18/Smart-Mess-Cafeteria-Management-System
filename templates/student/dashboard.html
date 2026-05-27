@@ -1,0 +1,55 @@
+{% extends "student/base_student.html" %}
+{% set page_title = "Student Dashboard" %}
+{% block content %}
+<div class="row g-3">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-header">Today's Menu</div>
+            <div class="card-body">
+                {% if menu_items %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Meal</th>
+                                <th>Price</th>
+                                <th>Order</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in menu_items %}
+                            <tr>
+                                <td>{{ item.item_name }}</td>
+                                <td>{{ item.meal_type }}</td>
+                                <td>{{ item.price }}</td>
+                                <td>
+                                    <form method="post" action="{{ url_for('student.place_order') }}" class="d-flex gap-2">
+                                        <input type="hidden" name="menu_id" value="{{ item.menu_id }}">
+                                        <input type="number" name="quantity" min="1" value="1" class="form-control form-control-sm qty-input">
+                                        <button class="btn btn-primary btn-sm">Order</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted">No menu items for today.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-header">Quick Links</div>
+            <div class="card-body d-grid gap-2">
+                <a class="btn btn-outline-primary" href="{{ url_for('student.order_history') }}">View Orders</a>
+                <a class="btn btn-outline-primary" href="{{ url_for('student.payment_history') }}">View Payments</a>
+                <a class="btn btn-outline-primary" href="{{ url_for('student.feedback') }}">Submit Feedback</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

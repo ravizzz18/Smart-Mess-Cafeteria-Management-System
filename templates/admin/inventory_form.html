@@ -1,0 +1,26 @@
+{% extends "admin/base_admin.html" %}
+{% set page_title = "Inventory Form" %}
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form method="post" class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">Item Name</label>
+                <input type="text" name="item_name" class="form-control" value="{{ item.item_name if item else '' }}" required>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Stock Quantity</label>
+                <input type="number" name="stock_quantity" min="0" class="form-control" value="{{ item.stock_quantity if item else '' }}" required>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Supplier</label>
+                <input type="text" name="supplier_name" class="form-control" value="{{ item.supplier_name if item else '' }}" required>
+            </div>
+            <div class="col-12">
+                <button class="btn btn-primary">Save</button>
+                <a class="btn btn-outline-secondary" href="{{ url_for('admin.inventory_list') }}">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

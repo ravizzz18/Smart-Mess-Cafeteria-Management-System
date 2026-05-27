@@ -1,0 +1,36 @@
+{% extends "admin/base_admin.html" %}
+{% set page_title = "Feedback" %}
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-body table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Student</th>
+                    <th>Item</th>
+                    <th>Rating</th>
+                    <th>Comments</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in feedback %}
+                <tr>
+                    <td>{{ row.feedback_id }}</td>
+                    <td>{{ row.student_name }}</td>
+                    <td>{{ row.item_name }}</td>
+                    <td>{{ row.rating }}</td>
+                    <td>{{ row.comments }}</td>
+                    <td>{{ row.feedback_date }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted">No feedback yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

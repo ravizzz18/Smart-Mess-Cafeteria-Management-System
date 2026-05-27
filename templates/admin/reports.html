@@ -1,0 +1,13 @@
+{% extends "admin/base_admin.html" %}
+{% set page_title = "Reports" %}
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-body">
+        <p class="text-muted">Download consolidated order reports for audits and DBMS review.</p>
+        <div class="d-flex gap-2">
+            <a class="btn btn-outline-primary" href="{{ url_for('admin.reports', format='csv') }}">Download CSV</a>
+            <a class="btn btn-outline-dark" href="{{ url_for('admin.reports', format='pdf') }}">Download PDF</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

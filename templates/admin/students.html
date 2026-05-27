@@ -1,0 +1,36 @@
+{% extends "admin/base_admin.html" %}
+{% set page_title = "Student Records" %}
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-body table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Hostel Block</th>
+                    <th>Phone</th>
+                    <th>Joined</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>{{ student.student_id }}</td>
+                    <td>{{ student.name }}</td>
+                    <td>{{ student.email }}</td>
+                    <td>{{ student.hostel_block }}</td>
+                    <td>{{ student.phone }}</td>
+                    <td>{{ student.created_at }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted">No students found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

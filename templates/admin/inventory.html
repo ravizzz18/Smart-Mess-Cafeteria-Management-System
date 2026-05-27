@@ -1,0 +1,43 @@
+{% extends "admin/base_admin.html" %}
+{% set page_title = "Inventory" %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">Inventory Items</h4>
+    <a class="btn btn-primary" href="{{ url_for('admin.inventory_add') }}">Add Item</a>
+</div>
+<div class="card shadow-sm">
+    <div class="card-body table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Item</th>
+                    <th>Stock</th>
+                    <th>Supplier</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.item_id }}</td>
+                    <td>{{ item.item_name }}</td>
+                    <td>{{ item.stock_quantity }}</td>
+                    <td>{{ item.supplier_name }}</td>
+                    <td class="d-flex gap-2">
+                        <a class="btn btn-sm btn-outline-primary" href="{{ url_for('admin.inventory_edit', item_id=item.item_id) }}">Edit</a>
+                        <form method="post" action="{{ url_for('admin.inventory_delete', item_id=item.item_id) }}">
+                            <button class="btn btn-sm btn-outline-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted">No inventory data.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

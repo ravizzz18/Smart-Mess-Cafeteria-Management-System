@@ -1,0 +1,67 @@
+{% extends "admin/base_admin.html" %}
+{% set page_title = "Order Management" %}
+{% block content %}
+<form class="row g-3 mb-3" method="get">
+    <div class="col-md-3">
+        <label class="form-label">Status</label>
+        <select name="status" class="form-select">
+            <option value="">All</option>
+            {% for st in ['Pending','Preparing','Ready','Completed','Cancelled'] %}
+            <option value="{{ st }}" {% if status == st %}selected{% endif %}>{{ st }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-5">
+        <label class="form-label">Student</label>
+        <input type="text" name="student" class="form-control" value="{{ student }}" placeholder="Search by name">
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+        <button class="btn btn-primary w-100">Filter</button>
+    </div>
+</form>
+<div class="card shadow-sm">
+    <div class="card-body table-responsive">
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Student</th>
+                    <th>Item</th>
+                    <th>Qty</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Time</th>
+                    <th>Update</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>{{ order.order_id }}</td>
+                    <td>{{ order.student_name }}</td>
+                    <td>{{ order.item_name }}</td>
+                    <td>{{ order.quantity }}</td>
+                    <td>{{ order.total_amount }}</td>
+                    <td>{{ order.order_status }}</td>
+                    <td>{{ order.order_time }}</td>
+                    <td>
+                        <form method="post" action="{{ url_for('admin.update_order_status', order_id=order.order_id) }}" class="d-flex gap-2">
+                            <select name="order_status" class="form-select form-select-sm">
+                                {% for st in ['Pending','Preparing','Ready','Completed','Cancelled'] %}
+                                <option value="{{ st }}" {% if order.order_status == st %}selected{% endif %}>{{ st }}</option>
+                                {% endfor %}
+                            </select>
+                            <button class="btn btn-sm btn-outline-primary">Update</button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8" class="text-center text-muted">No orders found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

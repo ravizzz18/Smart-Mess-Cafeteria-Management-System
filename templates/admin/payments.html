@@ -1,0 +1,40 @@
+{% extends "admin/base_admin.html" %}
+{% set page_title = "Payment Summary" %}
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-body table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Payment ID</th>
+                    <th>Order ID</th>
+                    <th>Student</th>
+                    <th>Item</th>
+                    <th>Amount</th>
+                    <th>Mode</th>
+                    <th>Status</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in payments %}
+                <tr>
+                    <td>{{ payment.payment_id }}</td>
+                    <td>{{ payment.order_id }}</td>
+                    <td>{{ payment.student_name }}</td>
+                    <td>{{ payment.item_name }}</td>
+                    <td>{{ payment.amount }}</td>
+                    <td>{{ payment.payment_mode }}</td>
+                    <td>{{ payment.payment_status }}</td>
+                    <td>{{ payment.payment_time }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="8" class="text-center text-muted">No payments found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

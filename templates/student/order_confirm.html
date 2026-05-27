@@ -1,0 +1,22 @@
+{% extends "student/base_student.html" %}
+{% set page_title = "Order Confirmation" %}
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-body">
+        {% if order %}
+        <h4>Order Confirmed</h4>
+        <p class="text-muted">Your order has been placed successfully.</p>
+        <ul class="list-group mb-3">
+            <li class="list-group-item">Order ID: {{ order.order_id }}</li>
+            <li class="list-group-item">Item: {{ order.item_name }}</li>
+            <li class="list-group-item">Quantity: {{ order.quantity }}</li>
+            <li class="list-group-item">Total Amount: {{ order.total_amount }}</li>
+            <li class="list-group-item">Status: {{ order.order_status }}</li>
+        </ul>
+        <a class="btn btn-outline-dark" href="{{ url_for('student.order_qr', order_id=order.order_id) }}" target="_blank">View QR Token</a>
+        {% else %}
+        <p class="text-muted">Order details not found.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

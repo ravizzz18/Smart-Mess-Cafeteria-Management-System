@@ -1,0 +1,33 @@
+{% extends "student/base_student.html" %}
+{% set page_title = "Meal Feedback" %}
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form method="post" class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">Menu Item</label>
+                <select name="menu_id" class="form-select" required>
+                    {% for item in menu_items %}
+                    <option value="{{ item.menu_id }}">{{ item.item_name }} ({{ item.available_date }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Rating</label>
+                <select name="rating" class="form-select" required>
+                    {% for r in range(1,6) %}
+                    <option value="{{ r }}">{{ r }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-12">
+                <label class="form-label">Comments</label>
+                <textarea name="comments" class="form-control" rows="3"></textarea>
+            </div>
+            <div class="col-12">
+                <button class="btn btn-primary">Submit Feedback</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

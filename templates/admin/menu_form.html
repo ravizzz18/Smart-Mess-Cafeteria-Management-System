@@ -1,0 +1,34 @@
+{% extends "admin/base_admin.html" %}
+{% set page_title = "Menu Form" %}
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form method="post" class="row g-3">
+            <div class="col-md-6">
+                <label class="form-label">Item Name</label>
+                <input type="text" name="item_name" class="form-control" value="{{ item.item_name if item else '' }}" required>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Meal Type</label>
+                <select name="meal_type" class="form-select" required>
+                    {% for meal in ['Breakfast','Lunch','Dinner','Snacks'] %}
+                    <option value="{{ meal }}" {% if item and item.meal_type == meal %}selected{% endif %}>{{ meal }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Price</label>
+                <input type="number" step="0.01" name="price" class="form-control" value="{{ item.price if item else '' }}" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Available Date</label>
+                <input type="date" name="available_date" class="form-control" value="{{ item.available_date if item else '' }}" required>
+            </div>
+            <div class="col-12">
+                <button class="btn btn-primary">Save</button>
+                <a class="btn btn-outline-secondary" href="{{ url_for('admin.menu_list') }}">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

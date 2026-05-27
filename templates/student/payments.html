@@ -1,0 +1,40 @@
+{% extends "student/base_student.html" %}
+{% set page_title = "Payment History" %}
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th>Payment ID</th>
+                        <th>Order ID</th>
+                        <th>Item</th>
+                        <th>Amount</th>
+                        <th>Mode</th>
+                        <th>Status</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payment in payments %}
+                    <tr>
+                        <td>{{ payment.payment_id }}</td>
+                        <td>{{ payment.order_id }}</td>
+                        <td>{{ payment.item_name }}</td>
+                        <td>{{ payment.amount }}</td>
+                        <td>{{ payment.payment_mode }}</td>
+                        <td>{{ payment.payment_status }}</td>
+                        <td>{{ payment.payment_time }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center text-muted">No payments yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

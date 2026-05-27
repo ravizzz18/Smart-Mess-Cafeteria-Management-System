@@ -1,0 +1,52 @@
+{% extends "student/base_student.html" %}
+{% set page_title = "Order History" %}
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Item</th>
+                        <th>Qty</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Time</th>
+                        <th>Token</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td>{{ order.order_id }}</td>
+                        <td>{{ order.item_name }}</td>
+                        <td>{{ order.quantity }}</td>
+                        <td>{{ order.total_amount }}</td>
+                        <td><span class="badge bg-secondary">{{ order.order_status }}</span></td>
+                        <td>{{ order.order_time }}</td>
+                        <td>
+                            <a class="btn btn-sm btn-outline-dark" href="{{ url_for('student.order_qr', order_id=order.order_id) }}" target="_blank">QR</a>
+                        </td>
+                        <td>
+                            {% if order.order_status == 'Pending' %}
+                            <form method="post" action="{{ url_for('student.cancel_order', order_id=order.order_id) }}">
+                                <button class="btn btn-sm btn-outline-danger">Cancel</button>
+                            </form>
+                            {% else %}
+                            <span class="text-muted">-</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center text-muted">No orders yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
