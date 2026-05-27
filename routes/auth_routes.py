@@ -51,10 +51,9 @@ def student_signup():
         name = request.form.get("name", "").strip()
         email = request.form.get("email", "").strip()
         password = request.form.get("password", "")
-        hostel_block = request.form.get("hostel_block", "").strip()
         phone = request.form.get("phone", "").strip()
 
-        if not all([name, email, password, hostel_block, phone]):
+        if not all([name, email, password, phone]):
             flash("Please fill in all required fields.", "warning")
             return redirect(url_for("auth.student_signup"))
 
@@ -64,8 +63,8 @@ def student_signup():
             return redirect(url_for("auth.student_signup"))
 
         execute(
-            "INSERT INTO students (name, email, password, hostel_block, phone) VALUES (%s, %s, %s, %s, %s)",
-            (name, email, generate_password_hash(password), hostel_block, phone),
+            "INSERT INTO students (name, email, password, phone) VALUES (%s, %s, %s, %s)",
+            (name, email, generate_password_hash(password), phone),
         )
         flash("Signup successful. Please login.", "success")
         return redirect(url_for("auth.student_login"))

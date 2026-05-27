@@ -16,12 +16,11 @@ def seed_student():
     student = fetch_one("SELECT student_id FROM students WHERE email = %s", ("student@example.com",))
     if not student:
         execute(
-            "INSERT INTO students (name, email, password, hostel_block, phone) VALUES (%s, %s, %s, %s, %s)",
+            "INSERT INTO students (name, email, password, phone) VALUES (%s, %s, %s, %s)",
             (
                 "Aarav Sharma",
                 "student@example.com",
                 generate_password_hash("student123"),
-                "Block A",
                 "9999988888",
             ),
         )

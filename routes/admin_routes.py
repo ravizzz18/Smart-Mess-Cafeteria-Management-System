@@ -3,7 +3,7 @@ import csv
 import io
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash, send_file
 from fpdf import FPDF
-from database.db import fetch_all, execute
+from database.db import fetch_all, fetch_one, execute
 
 admin_bp = Blueprint("admin", __name__, template_folder="../templates")
 
@@ -252,7 +252,13 @@ def reports():
                 f"x{row['quantity']} = {row['total_amount']} ({row['order_status']})"
             )
             pdf.multi_cell(0, 8, txt=line)
-        pdf_bytes = pdf.output(dest="S").encode("latin-1")
+        pdf_out = pdf.output(dest="S")
+        if isinstance(pdf_out, bytearray):
+            pdf_bytes = bytes(pdf_out)
+        elif isinstance(pdf_out, str):
+            pdf_bytes = pdf_out.encode("latin-1")
+        else:
+            pdf_bytes = pdf_out
         buffer = io.BytesIO(pdf_bytes)
         return send_file(
             buffer,
