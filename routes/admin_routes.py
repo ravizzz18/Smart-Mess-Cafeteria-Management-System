@@ -41,54 +41,54 @@ def dashboard():
         pending=pending,
         most_ordered=most_ordered,
         recent_orders=recent_orders,
-        students=students,
-        inventory=inventory,
-        payments=payments,
-        revenue_data=revenue_data,
-    )
+        pdf.ln(4)
+        pdf.set_auto_page_break(True, margin=15)
+        usable_w = pdf.w - pdf.l_margin - pdf.r_margin
+        font_family = getattr(pdf, "font_family", "Arial")
+        for row in orders[:50]:
+            line = (
+                f"#{row['order_id']} {row['student_name']} - {row['item_name']} "
+                f"x{row['quantity']} = {row['total_amount']} ({row['order_status']})"
+            )
+            try:
+                pdf.set_x(pdf.l_margin)
+            except Exception:
+                pass
 
+            try:
+                pdf.multi_cell(usable_w, 8, txt=line)
+            except Exception as exc:
+                from fpdf.errors import FPDFException
 
-@admin_bp.route("/admin/menu")
-def menu_list():
-    if not admin_required():
-        return redirect(url_for("auth.admin_login"))
-    items = fetch_all("SELECT * FROM menu ORDER BY available_date DESC")
-    return render_template("admin/menu_list.html", items=items)
+                if isinstance(exc, FPDFException):
+                    orig_size = getattr(pdf, "font_size_pt", 12)
+                    success = False
+                    for new_size in range(int(orig_size) - 1, 5, -1):
+                        pdf.set_font(font_family, size=new_size)
+                        try:
+                            pdf.set_x(pdf.l_margin)
+                            pdf.multi_cell(usable_w, 8, txt=line)
+                            success = True
+                            break
+                        except FPDFException:
+                            continue
 
+                    if not success:
+                        import textwrap
 
-@admin_bp.route("/admin/menu/add", methods=["GET", "POST"])
-def menu_add():
-    if not admin_required():
-        return redirect(url_for("auth.admin_login"))
-    if request.method == "POST":
-        item_name = request.form.get("item_name", "").strip()
-        meal_type = request.form.get("meal_type")
-        price = request.form.get("price")
-        available_date = request.form.get("available_date")
-        execute(
-            "INSERT INTO menu (item_name, meal_type, price, available_date) VALUES (%s, %s, %s, %s)",
-            (item_name, meal_type, price, available_date),
-        )
-        flash("Menu item added.", "success")
-        return redirect(url_for("admin.menu_list"))
-    return render_template("admin/menu_form.html", item=None)
+                        char_w = pdf.get_string_width("M") or 1
+                        approx_chars = max(1, int(usable_w / char_w))
+                        wrapped = textwrap.wrap(line, width=approx_chars, break_long_words=True, break_on_hyphens=True)
+                        for wl in wrapped:
+                            pdf.set_x(pdf.l_margin)
+                            pdf.multi_cell(usable_w, 8, txt=wl)
 
-
-@admin_bp.route("/admin/menu/<int:menu_id>/edit", methods=["GET", "POST"])
-def menu_edit(menu_id):
-    if not admin_required():
-        return redirect(url_for("auth.admin_login"))
-    item = fetch_one("SELECT * FROM menu WHERE menu_id = %s", (menu_id,))
-    if request.method == "POST":
-        item_name = request.form.get("item_name", "").strip()
-        meal_type = request.form.get("meal_type")
-        price = request.form.get("price")
-        available_date = request.form.get("available_date")
-        execute(
-            "UPDATE menu SET item_name = %s, meal_type = %s, price = %s, available_date = %s WHERE menu_id = %s",
-            (item_name, meal_type, price, available_date, menu_id),
-        )
-        flash("Menu item updated.", "success")
+                    try:
+                        pdf.set_font(font_family, size=orig_size)
+                    except Exception:
+                        pass
+                else:
+                    raise
         return redirect(url_for("admin.menu_list"))
     return render_template("admin/menu_form.html", item=item)
 
@@ -247,17 +247,25 @@ def reports():
         pdf.cell(200, 10, txt="Orders Report", ln=True, align="C")
         pdf.ln(4)
         pdf.set_auto_page_break(True, margin=15)
+<<<<<<< HEAD
         usable_w = pdf.w - pdf.l_margin - pdf.r_margin
         font_family = getattr(pdf, "font_family", "Arial")
+=======
+>>>>>>> d3b6d35 (Fix PDF multi_cell width issue in admin reports)
         for row in orders[:50]:
             line = (
                 f"#{row['order_id']} {row['student_name']} - {row['item_name']} "
                 f"x{row['quantity']} = {row['total_amount']} ({row['order_status']})"
             )
+<<<<<<< HEAD
+=======
+            # ensure we're at the left margin so multi_cell has full horizontal space
+>>>>>>> d3b6d35 (Fix PDF multi_cell width issue in admin reports)
             try:
                 pdf.set_x(pdf.l_margin)
             except Exception:
                 pass
+<<<<<<< HEAD
 
             try:
                 pdf.multi_cell(usable_w, 8, txt=line)
@@ -293,6 +301,9 @@ def reports():
                         pass
                 else:
                     raise
+=======
+            pdf.multi_cell(0, 8, txt=line)
+>>>>>>> d3b6d35 (Fix PDF multi_cell width issue in admin reports)
         pdf_out = pdf.output(dest="S")
         if isinstance(pdf_out, bytearray):
             pdf_bytes = bytes(pdf_out)
